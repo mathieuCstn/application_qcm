@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 #[Route('/api/qcm', methods: ['POST', 'GET'])]
 class QcmController extends AbstractController
 {
-    #[Route('/', name: 'qcm')]
+    #[Route('/', name: 'qcm.index')]
     public function index(
         QCMRepository $qcmRepository, 
         #[MapQueryString]
@@ -50,7 +50,7 @@ class QcmController extends AbstractController
         return $this->json($qcm, Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}/update', name :'qcm.update', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
+    #[Route('/{id}/update', name :'qcm.update', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
     public function update(
         #[MapRequestPayload(
             serializationContext: [
@@ -69,7 +69,7 @@ class QcmController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    #[Route('/{id}/delete', name: 'qcm.delete', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'qcm.delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function delete(
         #[MapRequestPayload(
             serializationContext: [
