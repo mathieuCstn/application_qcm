@@ -1,4 +1,5 @@
 <?php
+// TODO: Attribuer les groups aux champs correspondant aux routes de l'API
 
 namespace App\Entity;
 
@@ -19,6 +20,12 @@ class QCM
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -30,9 +37,6 @@ class QCM
      */
     #[ORM\OneToMany(targetEntity: QCMSession::class, mappedBy: 'qcm')]
     private Collection $qcmSessions;
-
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
 
     public function __construct()
     {
@@ -52,6 +56,30 @@ class QCM
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }
@@ -106,18 +134,6 @@ class QCM
                 $qcmSession->setQcm(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
 
         return $this;
     }
