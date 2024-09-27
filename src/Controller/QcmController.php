@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route('/qcm', methods: ['POST', 'GET'])]
+#[Route('/api/qcm', methods: ['POST', 'GET'])]
 class QcmController extends AbstractController
 {
     #[Route('/', name: 'qcm')]

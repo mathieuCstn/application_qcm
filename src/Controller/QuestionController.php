@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/question')]
+#[Route('/api/question')]
 class QuestionController extends AbstractController
 {
     #[Route('/', name: 'question.index')]
