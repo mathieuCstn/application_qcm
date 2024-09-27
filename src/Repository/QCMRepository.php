@@ -20,14 +20,14 @@ class QCMRepository extends ServiceEntityRepository
 
     public function paginateQcm(int $page, int $limit): PaginationInterface
     {
-        // TODO: Fair la fonction de pagination
         return $this->paginator->paginate(
             $this->createQueryBuilder('r'),
             $page,
             $limit,
             [
                 'distinct' => true,
-                // 'sortFieldAllowList' => ['q.id', 'q.title', 'q.created_at']
+                // TODO: Déterminer les requêtes autorisées
+                // 'sortFieldAllowList' => ['r.id', 'r.title', 'r.created_at']
             ]
         );
     }

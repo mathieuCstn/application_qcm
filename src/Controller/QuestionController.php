@@ -11,9 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/question')]
 class QuestionController extends AbstractController
 {
-    #[Route('/question', name: 'app_question')]
+    #[Route('/', name: 'question.index')]
     public function index(
         QuestionRepository $questionRepository,
         #[MapQueryString]

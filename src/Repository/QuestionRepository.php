@@ -5,15 +5,31 @@ namespace App\Repository;
 use App\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Question>
  */
 class QuestionRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, Question::class);
+    }
+
+    public function paginateQuestion(int $page, int $limit): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $this->createQueryBuilder('r'),
+            $page,
+            $limit,
+            [
+                'distinct' => true,
+                // TODO: Déterminer les requêtes autorisées
+                // 'sortFieldAllowList' => ['r.id', 'r.content', 'r.qcms', r.created_at]
+            ]
+        );
     }
 
     //    /**
