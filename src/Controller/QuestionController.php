@@ -23,7 +23,6 @@ class QuestionController extends AbstractController
     {
         $page = $paginationDTO?->page;
         $limit = 20;
-        // TODO: Créer la fonction paginateQuestion().
         $questions = $questionRepository->paginateQuestion($page, $limit);
         return $this->json($questions, Response::HTTP_OK);
     }
