@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\PaginationDTO;
 use App\Entity\QCM;
 use App\Repository\QCMRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,33 +28,64 @@ class QcmController extends AbstractController
         $limit = 20;
         $qcms = $qcmRepository->paginateQcm($page, $limit);
 
-        return $this->json($qcms, Response::HTTP_OK);
+        return $this->json($qcms, Response::HTTP_OK, [], [
+            'groups' => ['qcm.index']
+        ]);
     }
 
-    #[Route('/create', name: 'qcm.create')]
+    #[Route('/create', name: 'qcm.create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload(
             serializationContext: [
                 'groups' => ['qcm.create']
             ]
         )]
-        QCM $qcm
+        QCM $qcm,
+        EntityManagerInterface $em
     ): JsonResponse
     {
+        $qcm->setCreatedAt(new \DateTimeImmutable);
+        $em->persist($qcm);
+        $em->flush();
+        return $this->json($qcm, Response::HTTP_CREATED);
+    }
+
+    #[Route('/{id}/update', name :'qcm.update', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
+    public function update(
+        #[MapRequestPayload(
+            serializationContext: [
+                'groups' => ['qcm.update']
+            ]
+        )]
+        QCM $qcm,
+        EntityManagerInterface $em,
+        int $id
+    ): JsonResponse
+    {
+        $em->flush();
         return $this->json([
-            'message' => 'create qcm',
-        ]);
+            'message' => printf('QCM entity with id %d has been updated', [$id]),
+            'QCM' => $qcm,
+        ], Response::HTTP_OK);
     }
 
-    #[Route('/{id}/update', name :'qcm.update', requirements: ['id' => Requirement::DIGITS])]
-    public function update(QCM $qcm): JsonResponse
+    #[Route('/{id}/delete', name: 'qcm.delete', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
+    public function delete(
+        #[MapRequestPayload(
+            serializationContext: [
+                'groups' => ['qcm.delete']
+            ]
+        )]
+        QCM $qcm,
+        EntityManagerInterface $em,
+        int $id
+    ): JsonResponse
     {
-        return $this->json([]);
-    }
-
-    #[Route('/{id}/delete', name: 'qcm.delete', requirements: ['id' => Requirement::DIGITS])]
-    public function delete(QCM $qcm): JsonResponse
-    {
-        return $this->json([]);
+        $em->remove($qcm);
+        $em->flush();
+        return $this->json([
+            'message' => printf('QCM entity with id %d has been delete', [$id]),
+            'QCM' => $qcm,
+        ], Response::HTTP_OK);
     }
 }
