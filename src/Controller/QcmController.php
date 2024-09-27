@@ -44,10 +44,15 @@ class QcmController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse
     {
-        $qcm->setCreatedAt(new \DateTimeImmutable);
+        $qcm
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
         $em->persist($qcm);
         $em->flush();
-        return $this->json($qcm, Response::HTTP_CREATED);
+        return $this->json($qcm, Response::HTTP_CREATED, [], [
+            'groups' => ['qcm.index']
+        ]);
     }
 
     #[Route('/{id}/update', name :'qcm.update', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]

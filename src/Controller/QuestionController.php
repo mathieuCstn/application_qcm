@@ -43,8 +43,15 @@ class QuestionController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse
     {
-        $question;
-        return $this->json($question, Response::HTTP_CREATED);
+        $question
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setUpdatedAt(new \DateTimeImmutable())
+        ;
+        $em->persist($question);
+        $em->flush();
+        return $this->json($question, Response::HTTP_CREATED, [], [
+            'groups' => ['question.index']
+        ]);
     }
 
     #[Route('/{id}/update', name: 'question.create', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
