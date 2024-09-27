@@ -9,8 +9,7 @@
             "extensions": [
                 "EditorConfig.EditorConfig",
                 "bmewburn.vscode-intelephense-client",
-                "xdebug.php-debug",
-                "microsoft.vscode-docker"
+                "xdebug.php-debug"
             ]
         }
     },
