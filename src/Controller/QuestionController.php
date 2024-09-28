@@ -28,7 +28,7 @@ class QuestionController extends AbstractController
         $limit = 20;
         $questions = $questionRepository->paginateQuestion($page, $limit);
         return $this->json($questions, Response::HTTP_OK, [], [
-            'groups' => ['question.index']
+            'groups' => ['question.index', 'choice.index']
         ]);
     }
 
@@ -36,7 +36,7 @@ class QuestionController extends AbstractController
     public function create(
         #[MapRequestPayload(
             serializationContext: [
-                'groups' => ['question.create']
+                'groups' => ['question.create', 'choice.create']
             ]
         )]
         Question $question,
@@ -50,33 +50,41 @@ class QuestionController extends AbstractController
         $em->persist($question);
         $em->flush();
         return $this->json($question, Response::HTTP_CREATED, [], [
-            'groups' => ['question.index']
+            'groups' => ['question.index', 'choice.index']
         ]);
     }
 
-    #[Route('/{id}/update', name: 'question.create', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
+    #[Route('/{id}/update', name: 'question.update', requirements: ['id' => Requirement::DIGITS], methods: ['PUT'])]
     public function update(
         #[MapRequestPayload(
             serializationContext: [
-                'groups' => ['question.create']
+                'groups' => ['question.update', 'choice.update']
             ]
         )]
         Question $question
     ): JsonResponse
     {
-        return $this->json([]);
+        return $this->json([
+            'message' => printf('QCM entity with id %d has been updated', [$question->getId()]),
+            'Question' => $question,
+        ], Response::HTTP_OK, [], [
+            'groups' => ['question.index', 'choice.index']
+        ]);
     }
 
-    #[Route('/{id}/delete', name: 'question.create', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
+    #[Route('/{id}/delete', name: 'question.delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function delete(
-        #[MapRequestPayload(
-            serializationContext: [
-                'groups' => ['question.create']
-            ]
-        )]
-        Question $question
+        Question $question,
+        EntityManagerInterface $em
     ): JsonResponse
     {
-        return $this->json([]);
+        $em->remove($question);
+        $em->flush();
+        return $this->json([
+            'message' => printf('QCM entity with id %d has been deleted', [$question->getId()]),
+            'QCM' => $question,
+        ], Response::HTTP_OK, [], [
+            'groups' => ['question.index', 'choice.index']
+        ]);
     }
 }

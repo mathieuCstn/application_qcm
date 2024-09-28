@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: QCMRepository::class)]
 class QCM
@@ -18,18 +19,35 @@ class QCM
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups('qcm.index')]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups('qcm.index')]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(
+        'qcm.index', 
+        'qcm.create', 
+        'qcm.update'
+    )]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(
+        'qcm.index', 
+        'qcm.create', 
+        'qcm.update'
+    )]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'qcms')]
+    #[Groups(
+        'qcm.index', 
+        'qcm.create', 
+        'qcm.update'
+    )]
     private ?Question $questions = null;
 
     /**

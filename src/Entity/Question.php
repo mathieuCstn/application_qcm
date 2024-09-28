@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 #[UniqueEntity('content')]
@@ -20,12 +21,23 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(
+        'question.index'
+    )]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Groups(
+        'question.index'
+    )]
     private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(
+        'question.index', 
+        'question.create',
+        'question.update'
+    )]
     private ?string $content = null;
 
     /**
@@ -38,6 +50,11 @@ class Question
      * @var Collection<int, Choice>
      */
     #[ORM\OneToMany(targetEntity: Choice::class, mappedBy: 'question', orphanRemoval: true)]
+    #[Groups(
+        'question.index', 
+        'question.create',
+        'question.update'
+    )]
     private Collection $choices;
 
     public function __construct()

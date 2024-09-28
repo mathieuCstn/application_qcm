@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ChoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
 class Choice
@@ -14,9 +15,19 @@ class Choice
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(
+        'choice.index', 
+        'choice.create', 
+        'choice.update'
+        )]
     private ?string $choiceContent = null;
 
     #[ORM\Column]
+    #[Groups(
+        'choice.index', 
+        'choice.create', 
+        'choice.update'
+    )]
     private ?bool $isCorrect = null;
 
     #[ORM\ManyToOne(inversedBy: 'choices')]
@@ -24,6 +35,11 @@ class Choice
     private ?Question $question = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(
+        'choice.index', 
+        'choice.create', 
+        'choice.update'
+    )]
     private ?string $feedback = null;
 
     public function getId(): ?int

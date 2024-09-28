@@ -29,7 +29,7 @@ class QcmController extends AbstractController
         $qcms = $qcmRepository->paginateQcm($page, $limit);
 
         return $this->json($qcms, Response::HTTP_OK, [], [
-            'groups' => ['qcm.index']
+            'groups' => ['qcm.index', 'question.index', 'choice.index']
         ]);
     }
 
@@ -37,7 +37,7 @@ class QcmController extends AbstractController
     public function create(
         #[MapRequestPayload(
             serializationContext: [
-                'groups' => ['qcm.create']
+                'groups' => ['qcm.create', 'question.create', 'choice.create']
             ]
         )]
         QCM $qcm,
@@ -51,7 +51,7 @@ class QcmController extends AbstractController
         $em->persist($qcm);
         $em->flush();
         return $this->json($qcm, Response::HTTP_CREATED, [], [
-            'groups' => ['qcm.index']
+            'groups' => ['qcm.index', 'question.index', 'choice.index']
         ]);
     }
 
@@ -59,38 +59,35 @@ class QcmController extends AbstractController
     public function update(
         #[MapRequestPayload(
             serializationContext: [
-                'groups' => ['qcm.update']
+                'groups' => ['qcm.update', 'question.update', 'choice.update']
             ]
         )]
         QCM $qcm,
         EntityManagerInterface $em,
-        int $id
     ): JsonResponse
     {
         $em->flush();
         return $this->json([
-            'message' => printf('QCM entity with id %d has been updated', [$id]),
+            'message' => printf('QCM entity with id %d has been updated', [$qcm->getId()]),
             'QCM' => $qcm,
-        ], Response::HTTP_OK);
+        ], Response::HTTP_OK, [], [
+            'groups' => ['qcm.index', 'question.index', 'choice.index']
+        ]);
     }
 
     #[Route('/{id}/delete', name: 'qcm.delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function delete(
-        #[MapRequestPayload(
-            serializationContext: [
-                'groups' => ['qcm.delete']
-            ]
-        )]
         QCM $qcm,
         EntityManagerInterface $em,
-        int $id
     ): JsonResponse
     {
         $em->remove($qcm);
         $em->flush();
         return $this->json([
-            'message' => printf('QCM entity with id %d has been delete', [$id]),
+            'message' => printf('QCM entity with id %d has been deleted', [$qcm->getId()]),
             'QCM' => $qcm,
-        ], Response::HTTP_OK);
+        ], Response::HTTP_OK, [], [
+            'groups' => ['qcm.index', 'question.index', 'choice.index']
+        ]);
     }
 }
