@@ -3,7 +3,7 @@ services:
     build:
       context: ../.
       dockerfile: Dockerfile
-    container_name: application
+    container_name: application_cours
     command: sleep infinity
     volumes:
       - ../.:/workspace
@@ -14,7 +14,7 @@ services:
 
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
-    container_name: database
+    container_name: application_cours_database
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
