@@ -18,6 +18,9 @@ class Question
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(
+        'question.index'
+    )]
     private ?int $id = null;
 
     #[ORM\Column]
